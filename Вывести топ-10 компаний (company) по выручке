@@ -1,0 +1,21 @@
+Вывести топ-10 компаний (company) по выручке (trip_total)
+
+
+presto:default> select company, sum(trip_total ) as trip_total
+             -> from chicago_taxi_trips_parquet
+             -> group by company
+             -> order by trip_total desc limit 10;
+             company             | trip_total
+---------------------------------+-------------
+ Flash Cab                       | 6.6941156E7
+                                 |  4.007318E7
+ Taxi Affiliation Services       | 3.4168248E7
+ Yellow Cab                      | 3.2490626E7
+ Chicago Carriage Cab Corp       |   2.25587E7
+ Sun Taxi                        | 1.7356544E7
+ City Service                    | 1.7307714E7
+ Medallion Leasin                | 1.7071942E7
+ Taxi Affiliation Service Yellow |   1.25909E7
+ Globe Taxi                      |   8573773.0
+(10 rows)
+
