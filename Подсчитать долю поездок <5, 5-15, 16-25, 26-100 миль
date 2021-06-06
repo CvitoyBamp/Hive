@@ -1,0 +1,20 @@
+Подсчитать долю поездок <5, 5-15, 16-25, 26-100 миль
+
+presto:default> with cte as (
+             ->     select sum(case when trip_miles < 5 then 1 else 0 end) as trip_miles_5,
+             ->            sum(case when trip_miles >= 5 and trip_miles <= 15 then 1 else 0 end) as trip_miles_5_15,
+             ->            sum(case when trip_miles >= 16 and trip_miles <= 25 then 1 else 0 end) as trip_miles_16_25,
+             ->            sum(case when trip_miles >= 26 and trip_miles <= 100 then 1 else 0 end) as trip_miles_26_100,
+             ->            cast(count(*) AS DOUBLE) cnt
+             ->     from chicago_taxi_trips_parquet
+             -> )
+             -> select  (trip_miles_5 / cnt) * 100 as trip_miles_5,
+             ->         (trip_miles_5_15 / cnt) * 100 as trip_miles_5_15,
+             ->         (trip_miles_16_25 / cnt) * 100 as trip_miles_16_25,
+             ->         (trip_miles_26_100 / cnt) * 100 as trip_miles_26_100
+             -> from cte
+             -> ;
+   trip_miles_5    |  trip_miles_5_15   | trip_miles_16_25  | trip_miles_26_100
+-------------------+--------------------+-------------------+--------------------
+ 80.92737188814539 | 11.701881068983733 | 6.068678495105817 | 0.4975866238643349
+(1 row)
